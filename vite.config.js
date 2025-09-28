@@ -1,18 +1,19 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
+// Vite config untuk Tailwind v4
 export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
+    tailwindcss(), // langsung plugin resmi
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })
