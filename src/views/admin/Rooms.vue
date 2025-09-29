@@ -4,37 +4,48 @@
       <h2 class="text-xl font-semibold">Rooms</h2>
       <button @click="openForm()" class="bg-green-600 text-white px-4 py-2 rounded">+ Add Room</button>
     </div>
-
-    <table class="w-full bg-white shadow rounded">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2">Name</th>
-          <th class="p-2">Capacity</th>
-          <th class="p-2">Active</th>
-          <th class="p-2 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="r in roomsList" :key="r.id" class="border-t">
-          <td class="p-2">{{ r.name }}</td>
-          <td class="p-2">{{ r.capacity }}</td>
-          <td class="p-2">{{ r.is_active ? 'Yes' : 'No' }}</td>
-          <td class="p-2 text-right">
-            <button @click="openForm(r)" class="px-2 py-1 text-blue-600">✏️</button>
-            <button @click="remove(r.id)" class="px-2 py-1 text-red-600">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <table class="w-full bg-white shadow rounded border border-gray-200">
+  <thead class="bg-gray-100 border-b border-gray-300">
+    <tr>
+      <th class="p-3 text-left">Name</th>
+      <th class="p-3 text-left">Capacity</th>
+      <th class="p-3 text-left">Active</th>
+      <th class="p-3 text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      v-for="r in roomsList"
+      :key="r.id"
+      class="border-b hover:bg-gray-50 transition"
+    >
+      <td class="p-3">{{ r.nama_ruangan }}</td>
+      <td class="p-3">{{ r.kapasitas }}</td>
+      <td class="p-3">
+        <span
+          :class="r.status === 'aktif'
+            ? 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full'
+            : 'px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full'"
+        >
+          {{ r.status === 'aktif' ? 'Yes' : 'No' }}
+        </span>
+      </td>
+      <td class="p-3 text-right space-x-2">
+        <button @click="openForm(r)" class="px-2 py-1 text-blue-600 hover:underline">✏️</button>
+        <button @click="remove(r.id)" class="px-2 py-1 text-red-600 hover:underline">🗑️</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
     <!-- Modal -->
     <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded w-96">
         <h3 class="text-lg mb-4">{{ form.id ? 'Edit Room' : 'Add Room' }}</h3>
-        <input v-model="form.name" placeholder="Name" class="w-full border p-2 mb-2"/>
-        <input v-model="form.capacity" type="number" placeholder="Capacity" class="w-full border p-2 mb-2"/>
+        <input v-model="form.nama_ruangan" placeholder="Name" class="w-full border p-2 mb-2"/>
+        <input v-model="form.kapasitas" type="number" placeholder="Capacity" class="w-full border p-2 mb-2"/>
         <label class="flex items-center gap-2">
-          <input v-model="form.is_active" type="checkbox" /> Active
+          <input v-model="form.status" type="checkbox" true-value="aktif" false-value="non-aktif"/> Active
         </label>
         <div class="mt-4 flex justify-end gap-2">
           <button @click="showForm=false">Cancel</button>

@@ -1,10 +1,28 @@
 <template>
-  <header class="bg-white border-b px-6 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <SearchBar @search="onSearch" />
+  <header class="bg-white border-b px-6 py-3 grid grid-cols-3 items-center">
+    <!-- Kiri (kosong biar simetris) -->
+    <div></div>
+
+    <!-- Tengah (Search Bar) -->
+    <div class="flex justify-center">
+      <div class="flex w-full max-w-md">
+        <input
+          type="text"
+          placeholder="Cari..."
+          v-model="query"
+          class="flex-1 border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+        <button
+          @click="onSearch(query)"
+          class="bg-blue-500 text-white px-4 rounded-r hover:bg-blue-600"
+        >
+          🔍
+        </button>
+      </div>
     </div>
 
-    <div class="flex items-center gap-4">
+    <!-- Kanan (aksi) -->
+    <div class="flex items-center justify-end gap-4">
       <button title="Notifikasi" class="p-2 rounded hover:bg-gray-100">🔔</button>
       <button @click="$router.push('/admin/profile')" title="Settings" class="p-2 rounded hover:bg-gray-100">⚙️</button>
 
@@ -16,25 +34,18 @@
         </div>
       </div>
 
-      <button @click="logout" title="Logout" class="p-2 rounded hover:bg-gray-100">⤴️</button>
+      <button @click="logout" title="Logout" class="p-2 rounded hover:bg-gray-100">🟥</button>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import SearchBar from '@/components/SearchBar.vue'
-import { auth } from '@/api/auth'
+import { ref } from "vue"
 import router from '@/router'
+import { auth } from '@/api/auth'
 
+const query = ref('')
 const profile = ref({ name: 'Admin', avatar: null, role: 'Admin' })
-
-onMounted(async () => {
-  try {
-    const res = await auth.profile()
-    profile.value = res.data
-  } catch (e) {}
-})
 
 const onSearch = q => {
   console.log('search query', q)
