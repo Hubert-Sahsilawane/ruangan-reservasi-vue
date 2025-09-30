@@ -1,25 +1,62 @@
 <template>
-  <div class="max-w-lg bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-semibold mb-4">Profile</h2>
-
-    <div class="mb-4">
-      <label class="block text-sm font-medium">Name</label>
-      <input v-model="profile.name" class="border w-full p-2 rounded"/>
+  <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-2xl font-bold text-green-700">
+        {{ profile.name?.charAt(0).toUpperCase() || 'U' }}
+      </div>
+      <div>
+        <h2 class="text-2xl font-semibold text-gray-800">Profile Settings</h2>
+        <p class="text-gray-500 text-sm">Update your personal information</p>
+      </div>
     </div>
 
-    <div class="mb-4">
-      <label class="block text-sm font-medium">Email</label>
-      <input v-model="profile.email" type="email" class="border w-full p-2 rounded"/>
+    <!-- Form -->
+    <div class="space-y-4">
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        <input
+          v-model="profile.name"
+          class="border border-gray-300 w-full p-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+        />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input
+          v-model="profile.email"
+          type="email"
+          class="border border-gray-300 w-full p-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+        />
+      </div>
+
+      <!-- Role -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+        <input
+          v-model="profile.role"
+          disabled
+          class="border border-gray-200 w-full p-2 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+        />
+      </div>
     </div>
 
-    <div class="mb-4">
-      <label class="block text-sm font-medium">Role</label>
-      <input v-model="profile.role" disabled class="border w-full p-2 rounded bg-gray-100 text-gray-600"/>
-    </div>
-
-    <div class="flex justify-end gap-2">
-      <button @click="cancel" class="px-4 py-2 rounded border">Cancel</button>
-      <button @click="update" class="bg-green-600 text-white px-4 py-2 rounded">Update</button>
+    <!-- Buttons -->
+    <div class="flex justify-end gap-3 mt-6">
+      <button
+        @click="cancel"
+        class="px-5 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+      >
+        Cancel
+      </button>
+      <button
+        @click="update"
+        class="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+      >
+        Update
+      </button>
     </div>
   </div>
 </template>
@@ -43,10 +80,10 @@ onMounted(async () => {
 async function update() {
   try {
     await auth.update(profile.value)
-    alert('Profile updated successfully!')
+    alert('✅ Profile updated successfully!')
   } catch (err) {
     console.error(err)
-    alert('Failed to update profile')
+    alert('❌ Failed to update profile')
   }
 }
 

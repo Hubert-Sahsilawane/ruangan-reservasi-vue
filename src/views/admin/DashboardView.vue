@@ -32,18 +32,18 @@
 import { ref, onMounted } from "vue"
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import { Bar } from 'vue-chartjs'
-import { rooms } from '@/api/rooms'
-import { reservations } from '@/api/reservations'
+import api from '@/api/axios'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-// Dummy wrapper to make props clean
+// Dummy wrapper supaya BarChart lebih rapih
 const BarChart = {
   props: ['chartData'],
   components: { Bar },
   template: `<Bar :data="chartData" :options="{ responsive: true, plugins: { legend: { display: false } } }" />`
 }
 
+// Data untuk cards
 const stats = ref({
   rooms: 0,
   reservations: 0,
@@ -51,26 +51,29 @@ const stats = ref({
   rejected: 0
 })
 
+// Data chart
 const chartData = ref({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+  labels: [],
   datasets: [{
     label: 'Reservations',
-    data: [5, 10, 8, 15, 20, 12, 18],
+    data: [],
     backgroundColor: 'rgba(34, 197, 94, 0.7)'
   }]
 })
 
 onMounted(async () => {
   try {
-    const roomsRes = await rooms.all()
-    stats.value.rooms = roomsRes.data.total || roomsRes.data.length || 0
+    const res = await api.get('/dashboard/stats')
 
-    const reservationsRes = await reservations.all()
-    stats.value.reservations = reservationsRes.data.total || reservationsRes.data.length || 0
-    stats.value.approved = reservationsRes.data.data?.filter(r => r.status === 'approved').length || 0
-    stats.value.rejected = reservationsRes.data.data?.filter(r => r.status === 'rejected').length || 0
+    stats.value.rooms = res.data.rooms
+    stats.value.reservations = res.data.reservations
+    stats.value.approved = res.data.approved
+    stats.value.rejected = res.data.rejected
+
+    chartData.value.labels = res.data.chart.labels
+    chartData.value.datasets[0].data = res.data.chart.data
   } catch (err) {
-    console.error(err)
+    console.error("Error loading dashboard stats:", err)
   }
 })
 </script>

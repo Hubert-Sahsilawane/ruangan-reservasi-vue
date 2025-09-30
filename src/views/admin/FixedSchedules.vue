@@ -85,7 +85,7 @@
           @change="updateHari"
         />
 
-        <!-- Hari (auto, readonly) -->
+        <!-- Hari (auto, readonly, tetap dikirim ke backend) -->
         <input
           v-model="form.hari"
           placeholder="Hari"
@@ -157,10 +157,10 @@ const form = ref({
 /* Ambil data awal */
 async function fetchData() {
   const res = await fixedSchedules.all()
-  schedules.value = res.data.data || res.data
+  schedules.value = res.data?.data || res.data || []
 
   const r = await rooms.all()
-  roomsList.value = Array.isArray(r.data) ? r.data : r.data.data
+  roomsList.value = r.data?.data || r.data || []
 }
 
 /* Buka modal (new/edit) */
@@ -171,8 +171,8 @@ function openForm(s = null) {
         room_id: s.room_id,
         tanggal: s.tanggal,
         hari: s.hari,
-        waktu_mulai: s.waktu_mulai,
-        waktu_selesai: s.waktu_selesai,
+        waktu_mulai: s.waktu_mulai?.slice(0, 5) || "",
+        waktu_selesai: s.waktu_selesai?.slice(0, 5) || "",
         keterangan: s.keterangan || ""
       }
     : {
@@ -200,22 +200,32 @@ function updateHari() {
 
 /* Simpan data */
 async function save() {
-  if (form.value.waktu_mulai?.length === 5) {
-    form.value.waktu_mulai += ":00"
-  }
-  if (form.value.waktu_selesai?.length === 5) {
-    form.value.waktu_selesai += ":00"
-  }
-
-  if (form.value.id) {
-    await fixedSchedules.update(form.value.id, form.value)
-  } else {
-    await fixedSchedules.create(form.value)
+  const payload = {
+    room_id: form.value.room_id,
+    tanggal: form.value.tanggal,
+    hari: form.value.hari,
+    waktu_mulai: form.value.waktu_mulai?.slice(0, 5),
+    waktu_selesai: form.value.waktu_selesai?.slice(0, 5),
+    keterangan: form.value.keterangan || null
   }
 
-  showForm.value = false
-  fetchData()
+  console.log("🟢 Payload yang dikirim ke backend:", payload)
+
+  try {
+    if (form.value.id) {
+      await fixedSchedules.update(form.value.id, payload)
+    } else {
+      await fixedSchedules.create(payload)
+    }
+
+    showForm.value = false
+    fetchData()
+  } catch (error) {
+    console.error("❌ Error response:", error.response?.data || error.message)
+    alert("Gagal menyimpan jadwal! Detail ada di console.")
+  }
 }
+
 
 /* Hapus data */
 async function remove(id) {

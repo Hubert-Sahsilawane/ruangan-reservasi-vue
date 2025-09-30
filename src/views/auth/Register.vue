@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gray-100">
     <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold text-center text-green-700 mb-6">Register</h1>
+      <h1 class="text-2xl font-bold text-center text-green-700 mb-6">Reservasi Ruangan</h1>
 
       <form @submit.prevent="onRegister" class="space-y-4">
         <!-- Nama -->
