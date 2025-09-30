@@ -11,6 +11,10 @@ import Profile from "@/views/admin/Profile.vue"
 
 const routes = [
   {
+    path: "/",
+    redirect: "/login", // default redirect
+  },
+  {
     path: "/login",
     name: "Login",
     component: Login,

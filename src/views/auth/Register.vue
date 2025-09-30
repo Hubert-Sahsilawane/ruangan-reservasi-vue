@@ -101,26 +101,15 @@ const onRegister = async () => {
       return
     }
 
-    const res = await api.post("/register", {
+    await api.post("/register", {
       name: name.value,
       email: email.value,
       password: password.value,
       password_confirmation: passwordConfirmation.value,
     })
 
-    // cek semua kemungkinan token
-    const token =
-      res.data.access_token ||
-      res.data.token ||
-      res.data.data?.token
-
-    if (token) {
-      localStorage.setItem("token", token)
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`
-      router.push("/admin")
-    } else {
-      errorMessage.value = "Token tidak ditemukan di respons API!"
-    }
+    // setelah register berhasil, langsung arahkan ke login
+    router.push("/login")
   } catch (err) {
     errorMessage.value = err.response?.data?.message || "Registrasi gagal!"
   } finally {
@@ -128,4 +117,3 @@ const onRegister = async () => {
   }
 }
 </script>
-  
