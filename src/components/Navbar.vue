@@ -1,8 +1,8 @@
 <template>
   <header class="bg-white border-b px-6 py-3 grid grid-cols-3 items-center">
-    <!-- Kiri (kosong biar simetris) -->
-    <div></div>
-
+     <div>
+          <h1 class="text-2xl font-bold text-red-700 mb-4">Reservasi Ruangan</h1>
+    </div>
     <!-- Tengah (Search Bar) -->
     <div class="flex justify-center">
       <div class="flex w-full max-w-md">

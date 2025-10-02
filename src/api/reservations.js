@@ -3,13 +3,13 @@ import api from './axios'
 export const reservations = {
   all: (params = {}) => api.get('/reservations', { params }),
 
-  approve(id, reason) {
-    return api.put(`/reservations/${id}`, { status: 'approved', reason })
-  },
+  // Karyawan
+  create: data => api.post('/karyawan/reservations', data),
+  cancel: (id, reason = "") => api.put(`/karyawan/reservations/${id}/cancel`, { reason }),
 
-  reject(id, reason) {
-    return api.put(`/reservations/${id}`, { status: 'rejected', reason })
-  },
 
-  destroy: id => api.delete(`/reservations/${id}`) // ✅ ganti delete → destroy
+  // Admin
+  approve: (id, reason = "") => api.put(`/reservations/${id}`, { status: 'approved', reason }),
+  reject: (id, reason = "") => api.put(`/reservations/${id}`, { status: 'rejected', reason }),
+  destroy: id => api.delete(`/reservations/${id}`)
 }

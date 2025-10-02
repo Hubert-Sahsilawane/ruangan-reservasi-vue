@@ -74,18 +74,26 @@ const onLogin = async () => {
       password: password.value,
     })
 
-    // cek beberapa kemungkinan key token
-    const token =
-      res.data.access_token ||
-      res.data.token ||
-      res.data.data?.token
+    // backend kamu return { user: {...}, token: "xxx" }
+    const token = res.data.token || res.data.data?.token
+    const user = res.data.user || res.data.data?.user
 
-    if (token) {
+    if (token && user) {
       localStorage.setItem("token", token)
+      localStorage.setItem("role", user.role)
+      localStorage.setItem("user", JSON.stringify(user)) // simpan user lengkap
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`
-      router.push("/admin")
+
+      // redirect sesuai role
+      if (user.role === "admin") {
+        router.push("/admin")
+      } else if (user.role === "karyawan") {
+        router.push("/karyawan")
+      } else {
+        router.push("/login") // fallback
+      }
     } else {
-      errorMessage.value = "Token tidak ditemukan di respons API!"
+      errorMessage.value = "Data login tidak lengkap dari API!"
     }
   } catch (err) {
     errorMessage.value = err.response?.data?.message || "Login gagal. Periksa email dan password!"
